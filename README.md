@@ -30,3 +30,5 @@ Note that if the server if restarted, this will cease to work and you will have 
 
 For the `.pest_cron`, if it's on a shared hosting, you'll need to take over the cpanel (A tutorial for another day) and add it as a cron job. If it's a root user, use crontab.
 
+
+Stay Dangerous :)
