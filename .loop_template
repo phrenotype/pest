@@ -1,0 +1,7 @@
+
+while [ 1 -eq 1 ]; do
+
+    act
+
+    sleep SLEEP_TIME
+done
