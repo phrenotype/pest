@@ -26,7 +26,7 @@ To build the final product you need the following
 To build a wiper, run:
 
 ```bash
-bash build wiper /home/user/public_html "Hacked" 60
+bash pest-builder wiper /home/user/public_html "Hacked" 60
 ```
 
 A file named ".wiper" will be created.
@@ -35,7 +35,7 @@ A file named ".wiper" will be created.
 To build a cron wiper, run:
 
 ```bash
-bash build cronwiper /home/user/public_html "Hacked" 60
+bash pest-builder cronwiper /home/user/public_html "Hacked" 60
 ```
 
 A file named ".cron_wiper" will be created.
