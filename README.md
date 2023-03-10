@@ -20,7 +20,7 @@ To build the final product you need the following
 
 - The webroot path
 - A custom message (A ransom message maybe)
-- Sleep time in seconds (This will be ignored for cron wiper). This servers as a delay between each run.
+- Sleep time in seconds (This will be ignored for cron wiper). This serves as a delay between each run.
 
 
 To build a wiper, run:
