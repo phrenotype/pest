@@ -1,4 +1,3 @@
 .loop_wiper
 .cron_wiper
-test
-test/*
+test*

