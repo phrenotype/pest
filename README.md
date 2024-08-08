@@ -4,17 +4,32 @@ This is for **educational purposes** only. I bear no responsibility for what you
 
 This is a fire and forget way to keep a webmaster confused.
 
-Using the build tool, you can generate three different types of bash files that will perform differently.
+Using the build tool, you can generate two different types of bash files that will perform differently.
 
 - Loop wiper : Will consistently wipe the webroot and replace the index.php/index.html with a custom message. Runs in an infinite loop.
 
 - Cron wiper : Same as the **loop**, but runs only once as it is intended to be added as a cron job.
 
+And yes, it's an encrypted malware.
+
 # How it works
 
-A developer will get a message on the web root in an `index.php` and `index.html` file. No matter what he/she does, They cannot get rid of those files. They back after being deleted and no other file can be uploaded. Any file uploaded to the web root also gets deleted almost immediately.
+A developer will get a message on the web root in an `index.php` and `index.html` file. No matter what he/she does, They cannot get rid of those files. They're back after being deleted and no other file can be uploaded. Any file uploaded to the web root also gets deleted almost immediately.
 
 # Usage
+
+
+First clone the git repo
+
+```bash
+$ git clone https://github.com/phrenotype/pest.git
+```
+
+Then move into the directory
+
+```bash
+$ cd pest
+```
 
 As usual, to see usage,
 
@@ -91,12 +106,13 @@ eval "$decrypted";
 
 **NOTE**: The path you pass via --target should be a path that exists on your target server.
 
-Yes. It's an encrypted malware.
 
 ## Obfuscation
 It is important you obfuscate these generated files by changing the file names, making them dot files and adding useless whitespace and comments at the top of the file to distract during manual audit.
 
 Also note that the cron wiper is discouraged as it raises attention and is quick to spot.
+
+Whenever possible, deploy it in a fileless manner.
 
 ## Using the generated files
 To run the loop_wiper, upload the generated **.loop_wiper** file to the target server and make it executable by running  
@@ -113,5 +129,10 @@ $ nohup ./.loop_wiper & disown
 
 To run the .cron_wiper, **add it the the list of cron jobs**. Using the cpanel or **crontab** command.
 
-If you find this page confusing, or you have no idea what's going on, you should not be here at all. I know, it feels frustrating and you feel left out, and that's okay. Go build a website or an app.
+# Finally
+And that's it. If you find this page confusing, or you have no idea what's going on, you should not be here at all. I know, it feels frustrating and you feel left out, and that's okay. Go build a website or an app.
 
+# Contact
+Email: dev@paulrobert.xyz
+
+Twitter: ![Twitter followers](https://img.shields.io/twitter/follow/phrenotyper?style=social)
